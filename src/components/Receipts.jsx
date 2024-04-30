@@ -122,7 +122,7 @@ const Receipts = () => {
                           required: "field is required",
                         })}
                         type="text"
-                        placeholder="Who is this invoice from? (required)"
+                        placeholder="invoice from? (required)"
                         className="w-full text-sm p-2 border border-1 border-gray-400 rounded md:w-64"
                         cols="20"
                       />
