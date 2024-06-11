@@ -21,6 +21,12 @@ const Receipts = () => {
     }
   });
 
+  const calculateProduct = (index) => {
+    const quantity = fields[index] ?.quantity || 0;
+    const rate = fields[index] ?.rate || 0;
+    return (quantity * rate);
+  };
+
   const { fields, append, remove } = useFieldArray({
     name: "cart",
     control,
@@ -28,12 +34,6 @@ const Receipts = () => {
       required: "Please append at least one item",
     },
   });
-
-  const calculateProduct = (index) => {
-    const quantity = fields[index]?.quantity || 0;
-    const rate = fields[index]?.rate || 0;
-    return quantity * rate;
-  };
 
   const onSubmit = (data) => {
     // Handle form submission, data will contain the uploaded image
@@ -276,7 +276,7 @@ const Receipts = () => {
                         />
                         <button
                           type="button"
-                          className="text-white bg-red-800 p-2 mt-4"
+                          className="text-white bg-red-600 p-2 mt-4"
                           onClick={() => remove(index)}
                         >
                           X
