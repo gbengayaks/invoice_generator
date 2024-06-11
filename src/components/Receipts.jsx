@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import React, { useState, useRef, useEffect } from "react";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import FinalReceipt from "./FinalReceipt";
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
   const fileInputRef = useRef(null);
-
   const [submittedData, setSubmittedData] = useState(null);
 
   const {
@@ -13,12 +12,14 @@ const Receipts = () => {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
       receiptt: "RECEIPT",
       tagg: "#",
-    }
+      cart: [],
+    },
   });
 
   const calculateProduct = (index) => {
@@ -35,35 +36,26 @@ const Receipts = () => {
     },
   });
 
+  const calculateProduct = (index) => {
+    const quantity = fields[index]?.quantity || 0;
+    const rate = fields[index]?.rate || 0;
+    return quantity * rate;
+  };
+
   const onSubmit = (data) => {
-    // Handle form submission, data will contain the uploaded image
     setSubmittedData(data);
-    const newData = setSubmittedData;
-    console.log(newData);
-
-    // const jsonData = JSON.stringify(data, null, 2);
-    // console.log({'submit data': data});
-
-    // Redirect to the display page
-    // navigate('/preview', { state: {jsonData} });
-    //
-    //navigate('/edit', {state: {formData: data}})
-
-    // Function to handle file input change
+    console.log(data);
   };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      // Update the logo state with the selected file
       setLogo(URL.createObjectURL(selectedFile));
     }
   };
 
-  // Function to clear the logo
   const voidSelect = () => {
     setLogo(null);
-    // Reset the file input field
     fileInputRef.current.value = null;
   };
 
@@ -79,7 +71,6 @@ const Receipts = () => {
                 <div className="flex flex-col md:flex-row justify-between">
                   <div className="">
                     <div className="mx-auto w-60 h-48 border-2 rounded-md bg-gray-400 md:w-60 md:h-40 md:mx-0">
-                      {/* Display the selected image if available, otherwise display the label */}
                       {logo ? (
                         <>
                           <img
@@ -96,26 +87,23 @@ const Receipts = () => {
                             </button>
                           </div>
                         </>
-                          ) : (
+                      ) : (
                         <div>
                           <input
-                              {...register("file")}
-                              onChange={handleFileChange} // Call handleFileChange on file selection
-                              type="file"
-                              id="file"
-                              accept="image/*" // Accept only image files
-                              className="invisible pb-7 pr-24" // Hide the input field
-                              ref={fileInputRef} // Assign the ref to the file input field
-                            
-                            />
+                            {...register("file")}
+                            onChange={handleFileChange}
+                            type="file"
+                            id="file"
+                            accept="image/*"
+                            className="invisible pb-7 pr-24"
+                            ref={fileInputRef}
+                          />
                           <label className="text-lg p-8 md:" htmlFor="file">
                             + Add Your Logo
                           </label>
-                      </div>
+                        </div>
                       )}
-                      {/* Input field for selecting file */} 
                     </div>
-
                     <div className="mt-10 flex flex-col gap-y-3">
                       <textarea
                         {...register("whofrom", {
@@ -139,7 +127,6 @@ const Receipts = () => {
                             cols="20"
                           />
                         </div>
-
                         <div className="mb-2 md:grid gap-y-3">
                           <label htmlFor="shipto">Ship to</label>
                           <textarea
@@ -161,7 +148,6 @@ const Receipts = () => {
                         {...register("receiptt")}
                         type="text"
                         className="w-full md:w-96 text-xl font-semibold text-end rounded p-2 border-1 border border-gray-400"
-                        
                       />
                       <div className="flex justify-end">
                         <input
@@ -235,7 +221,7 @@ const Receipts = () => {
                       <li>Item</li>
                     </div>
                     <div className="invisible h-7 md:flex gap-x-10 md:visible">
-                      <li className="px-2">Quantity</li>
+                      <li className="px-2">Quantityx</li>
                       <li className="px-2">Rate</li>
                       <li className="px-2">Amount</li>
                       <li className="px-2">Delete</li>
@@ -252,27 +238,27 @@ const Receipts = () => {
                         />
                         <input
                           {...register(`cart.${index}.quantity`)}
-                          defaultValue={field.quantity}
                           className="w-16 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
                           type="number"
+                          defaultValue={field.quantity}
                         />
                         <span id="currency" className="px-2 md:mt-5 md:px-1">
                           ₦
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
-                          defaultValue={field.rate}
                           className="w-20 p-2 md:mt-4 border border-1 border-gray-600 rounded"
                           type="number"
+                          defaultValue={field.rate}
                         />
                         <span id="currency" className="px-2 md:mt-5 md:px-1">
-                        ₦
+                          ₦
                         </span>
                         <input
                           {...register(`cart.${index}.amount`)}
-                          className="w-20 p-2 mr-3 md:mt-4"
-                          value={calculateProduct(index)}
+                          className="w-20 p-2 md:mt-4"
                           type="number"
+                          readOnly
                         />
                         <button
                           type="button"
@@ -290,10 +276,10 @@ const Receipts = () => {
                       className="text-white rounded text-xs border bg-blue-600 p-2 px-3 hover:bg-blue-400"
                       onClick={() =>
                         append({
-                          description:"",
-                          quantity: 1,
-                          rate: 0.0,
-                          amount: 0.0,
+                          description: "",
+                          quantity: 0,
+                          rate: 0,
+                          amount: 0,
                         })
                       }
                     >
@@ -344,7 +330,6 @@ const Receipts = () => {
                   <option value="RECEIPT">Receipt</option>
                 </select>
               </div>
-
               <div className="flex justify-center">
                 <button
                   type="submit"
