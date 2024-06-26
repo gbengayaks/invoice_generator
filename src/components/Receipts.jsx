@@ -22,12 +22,6 @@ const Receipts = () => {
     },
   });
 
-  const calculateProduct = (index) => {
-    const quantity = fields[index] ?.quantity || 0;
-    const rate = fields[index] ?.rate || 0;
-    return (quantity * rate);
-  };
-
   const { fields, append, remove } = useFieldArray({
     name: "cart",
     control,
@@ -36,11 +30,21 @@ const Receipts = () => {
     },
   });
 
-  const calculateProduct = (index) => {
-    const quantity = fields[index]?.quantity || 0;
-    const rate = fields[index]?.rate || 0;
-    return quantity * rate;
-  };
+  const watchFields = useWatch({
+    name: "cart",
+    control,
+  });
+
+  useEffect(() => {
+    if (watchFields && watchFields.length > 0) {
+      watchFields.forEach((field, index) => {
+        const quantity = parseFloat(field.quantity) || 0;
+        const rate = parseFloat(field.rate) || 0;
+        const amount = quantity * rate;
+        setValue(`cart.${index}.amount`, amount);
+      });
+    }
+  }, [watchFields, setValue]);
 
   const calculateTotalAmount = () => {
     if (watchFields && watchFields.length > 0) {
@@ -274,7 +278,7 @@ const Receipts = () => {
                         />
                         <button
                           type="button"
-                          className="text-white bg-red-600 p-2 mt-4"
+                          className="text-white bg-red-800 p-2 mt-4"
                           onClick={() => remove(index)}
                         >
                           X
