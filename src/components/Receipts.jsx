@@ -46,7 +46,19 @@ const Receipts = () => {
     }
   }, [watchFields, setValue]);
 
+  const calculateTotalAmount = () => {
+    if (watchFields && watchFields.length > 0) {
+      return watchFields.reduce((total, field) => {
+        const amount = parseFloat(field.amount) || 0;
+        return total + amount;
+      }, 0);
+    }
+    return 0;
+  };
+
   const onSubmit = (data) => {
+    const totalAmount = calculateTotalAmount();
+    data.totalamount = totalAmount;
     setSubmittedData(data);
     console.log(data);
   };
@@ -225,7 +237,7 @@ const Receipts = () => {
                       <li>Item</li>
                     </div>
                     <div className="invisible h-7 md:flex gap-x-10 md:visible">
-                      <li className="px-2">Quantityx</li>
+                      <li className="px-2">Quantity</li>
                       <li className="px-2">Rate</li>
                       <li className="px-2">Amount</li>
                       <li className="px-2">Delete</li>
@@ -293,6 +305,11 @@ const Receipts = () => {
                   <p className="text-red-800 text-center text-xl">
                     {errors.cart?.root?.message}
                   </p>
+                  <div className="mt-5 text-right">
+                    <p className="text-lg font-semibold">
+                      Total: ₦{calculateTotalAmount().toFixed(2)}
+                    </p>
+                  </div>
                   <div>
                     <label htmlFor="notes">Notes</label>
                     <div className="my-2">
