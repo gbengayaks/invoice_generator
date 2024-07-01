@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
-import FinalReceipt from "./FinalReceipt";
+import Final from "./FinalReceipt";
 
-const Receipts = () => {
+const Receiptss = () => {
   const [logo, setLogo] = useState(null);
   const fileInputRef = useRef(null);
   const [submittedData, setSubmittedData] = useState(null);
@@ -78,157 +78,79 @@ const Receipts = () => {
   return (
     <div>
       {submittedData ? (
-        <FinalReceipt formData={submittedData} logo={logo} />
+        <Final formData={submittedData} logo={logo} />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
             <div className="m-2 col-span-12 md:col-span-10 border-1 border border-gray-600">
               <div className="mx-auto p-5">
-                <div className="flex flex-col md:flex-row justify-between">
-                  <div className="">
-                    <div className="mx-auto w-60 h-48 border-2 rounded-md bg-gray-400 md:w-60 md:h-40 md:mx-0">
-                      {logo ? (
-                        <>
-                          <img
-                            src={logo}
-                            alt="Selected Logo"
-                            className="w-full h-full object-contain rounded-md"
-                          />
-                          <div className="flex justify-center items-center">
-                            <button
-                              onClick={voidSelect}
-                              className="bg-red-600 text-white py-1 px-2 mb-8 rounded"
-                            >
-                              Clear Logo
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        <div>
-                          <input
-                            {...register("file")}
-                            onChange={handleFileChange}
-                            type="file"
-                            id="file"
-                            accept="image/*"
-                            className="invisible pb-7 pr-24"
-                            ref={fileInputRef}
-                          />
-                          <label className="text-lg p-8 md:" htmlFor="file">
-                            + Add Your Logo
-                          </label>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-10 flex flex-col gap-y-3">
-                      <textarea
-                        {...register("whofrom", {
-                          required: "field is required",
-                        })}
-                        type="text"
-                        placeholder="invoice from? (required)"
-                        className="w-full text-sm p-2 border border-1 border-gray-400 rounded md:w-64"
-                        cols="20"
-                      />
-                      <div className="md:flex gap-4 mt-2">
-                        <div className="mb-2 md:grid gap-y-3">
-                          <label htmlFor="billto">Bill to</label>
-                          <textarea
-                            {...register("billto", {
-                              required: "filed is required",
-                            })}
-                            id="billto"
-                            type="text"
-                            className="w-full pl-2 border border-1 border-gray-400 rounded md:w-48"
-                            cols="20"
-                          />
-                        </div>
-                        <div className="mb-2 md:grid gap-y-3">
-                          <label htmlFor="shipto">Ship to</label>
-                          <textarea
-                            {...register("shipto", {
-                              required: "Field is required",
-                            })}
-                            id="shipto"
-                            type="text"
-                            className="w-full pl-2 border border-1 border-gray-400 rounded md:w-48"
-                            cols="20"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                <p className="text-2xl text-center mb-8 font-bold">RECEIPT #300</p>
+  
+                <div className="flex flex-col md:flex-row justify-between mb-6">
+                  
+                  <div className="mb-4 md:mb-0 md:w-1/2">
+                    <input {...register("comName")} type="text" placeholder="Company Name" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("comAddress")} type="text" placeholder="Company Address" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("comEmail")} type="text" placeholder="Email Address" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("comPhone")} type="phone" placeholder="Phone Number" className="w-full mb-2 p-2 border rounded" />
                   </div>
-                  <div className="grid justify-items-end">
-                    <div className="flex flex-col justify-end gap-y-2 mb-4">
-                      <input
-                        {...register("receiptt")}
-                        type="text"
-                        className="w-full md:w-96 text-xl font-semibold text-end rounded p-2 border-1 border border-gray-400"
+                  
+                  <div className="mx-auto border rounded-md bg-gray-300 md:w-60 md:h-40 md:mx-0">
+                    {logo ? (
+                   <>
+                      <img 
+                        src={logo} 
+                        alt="Company Logo" 
+                        className="w-36 h-36 mt-2 bg-blue-400 text-center rounded-full" 
                       />
-                      <div className="flex justify-end">
-                        <input
-                          {...register("tagg")}
-                          className="w-8 p-1 bg-gray-100 rounded-l-sm border-1 border border-gray-400"
-                          readOnly
-                        />
-                        <input
-                          {...register("receiptno")}
-                          type="text"
-                          className="w-32 p-1 rounded-r-sm border-1 border border-gray-400"
-                          placeholder="receipt no"
-                        />
+                      <div className="flex justify-center items-center">
+                        <button
+                          onClick={voidSelect}
+                          className="bg-red-600 text-white py-1 px-2 mb-8 rounded"
+                        >
+                          Clear Logo
+                        </button>
                       </div>
-                    </div>
-                    <div className="grid justify-items-end gap-y-3 mb-3">
-                      <div className="flex gap-2">
-                        <label className="text-sm" htmlFor="">
-                          Date
-                        </label>
-                        <input
-                          {...register("ddate", {
-                            required: "Date to is required",
-                          })}
-                          type="date"
-                          className="w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400"
-                        />
-                      </div>
-                      <div className="md:flex gap-2">
-                        <label className="text-sm" htmlFor="">
-                          Payment Terms
-                        </label>
-                        <input
-                          {...register("paymentterms", {
-                            required: "Payment terms to is required",
-                          })}
-                          type="text"
-                          className="w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400"
-                        />
-                      </div>
-                      <div className="flex gap-2 ">
-                        <label className="text-sm" htmlFor="">
-                          Due Date
-                        </label>
-                        <input
-                          {...register("duedate", {
-                            required: "due date to is required",
-                          })}
-                          type="date"
-                          className="w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <label className="text-sm" htmlFor="">
-                          PO Number
-                        </label>
-                        <input
-                          {...register("ponumber", {
-                            required: "bill to is required",
-                          })}
-                          type="number"
-                          className="w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400"
-                        />
-                      </div>
-                    </div>
+                   </>
+                    ) : (
+                    <div>
+                      <input
+                        {...register("file")}
+                        onChange={handleFileChange}
+                        type="file"
+                        id="file"
+                        accept="image/*"
+                        className="invisible pb-7 pr-24"
+                        ref={fileInputRef}
+                      />
+                      <label className="text-lg p-8 md:" htmlFor="file">
+                        + Add Your Logo
+                      </label>
+                   </div>
+                   )}
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row justify-between">
+        
+                  <div className="mb-4 pr-4 md:mb-0 md:w-1/3">
+                    <h2 class="font-bold mr-2 mb-2">BILL TO</h2>
+                    <input {...register("conName")} type="text" placeholder="Contact Name" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("cliComName")} type="text" placeholder="Client Company Name" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("conAddress")} type="text" placeholder="Address" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("conPhone")} type="phone" placeholder="Phone" className="w-full mb-2 p-2 border rounded" />
+                  </div>
+                
+                  <div className="mb-4 pr-4 md:mb-0 md:w-1/3">
+                    <h2 class="font-bold mb-2">SHIP TO</h2>
+                    <input {...register("shipName")} type="text" placeholder="Name/Dept" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("shipCliName")} type="text" placeholder="Client Company Name" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("shipToAddress")} type="text" placeholder="Address" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("shipPhone")} type="pnone" placeholder="Phone" className="w-full mb-2 p-2 border rounded" />
+                  </div>
+                
+                  <div className="md:w-1/3">
+                    <h2 class="font-bold mb-2">Date</h2>
+                    <input {...register("transdate")} type="date" placeholder="mm/dd/yyyy" className="w-full mb-2 p-2 border rounded" />
                   </div>
                 </div>
                 <div className="my-5">
@@ -254,25 +176,25 @@ const Receipts = () => {
                         />
                         <input
                           {...register(`cart.${index}.quantity`)}
-                          className="w-16 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
+                          className="w-10 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                           defaultValue={field.quantity}
                         />
-                        <span id="currency" className="px-2 md:mt-5 md:px-1">
+                        <span id="currency" className="px-1 md:mt-5 md:px-1">
                           ₦
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
-                          className="w-20 p-2 md:mt-4 border border-1 border-gray-600 rounded"
+                          className="w-24 p-1 md:mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                           defaultValue={field.rate}
                         />
-                        <span id="currency" className="px-2 md:mt-5 md:px-1">
+                        <span id="currency" className="px-1 md:mt-5 md:px-1">
                           ₦
                         </span>
                         <input
                           {...register(`cart.${index}.amount`)}
-                          className="w-20 p-2 md:mt-4"
+                          className="w-24 p-2 md:mt-4"
                           type="number"
                           readOnly
                         />
@@ -311,7 +233,7 @@ const Receipts = () => {
                     </p>
                   </div>
                   <div>
-                    <label htmlFor="notes">Notes</label>
+                    <p className="underline">Terms & Instructions</p>
                     <div className="my-2">
                       <textarea
                         {...register("notes")}
@@ -319,10 +241,9 @@ const Receipts = () => {
                         className="w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80"
                         cols="20"
                         rows="3"
-                        placeholder="Notes - any relevant information not already covered"
+                        placeholder="How was payment made, e.g: cash, card, cheque ...."
                       />
                     </div>
-                    <label htmlFor="terms">Terms</label>
                     <div className="mt-2">
                       <textarea
                         {...register("terms")}
@@ -330,7 +251,7 @@ const Receipts = () => {
                         className="w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80"
                         cols="30"
                         rows="3"
-                        placeholder="terms and conditions - late fees, payment method, delivery schedule"
+                        placeholder="Add terms here, e.g: warranty, returns policy ...."
                       />
                     </div>
                   </div>
@@ -367,4 +288,4 @@ const Receipts = () => {
   );
 };
 
-export default Receipts;
+export default Receiptss;
