@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useRef } from "react";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
-const Final = ({ formData, logo, randNum, curency }) => {
+const FinalReceipt = ({ formData, logo, randNum, curency }) => {
   console.log("new data :", formData);
+  const printRef = useRef();
+  const buttonRef = useRef();
+
+  const handleDownloadPdf = async () => {
+    //hide the button
+    buttonRef.current.style.display = 'none';
+
+    // const element = printRef.current;
+    // const canvas = await html2canvas(element);
+    // const data = canvas.toDataURL('image/png');
+    // const pdf = new jsPDF();
+    // const imgProperties = pdf.getImageProperties(data);
+    // const pdfWidth = pdf.internal.pageSize.getWidth();
+    // const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+
+    // pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+    const element = printRef.current;
+    const canvas = await html2canvas(element, { scale: 2 });
+    const data = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    const width = imgWidth * ratio;
+    const height = imgHeight * ratio;
+
+    pdf.addImage(data, 'PNG', 0, 0, width, height);
+    pdf.save('download.pdf');
+
+     // Show the button again
+     buttonRef.current.style.display = 'block';
+  };
 
   return (
-    <div className="m-10">
+    <div ref={printRef} className="mx-auto p-10 ">
       <p className="text-2xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
       <div className="flex flex-col md:flex-row justify-between mb-6">
         <div className="mb-4 md:mb-0 md:w-1/2">
@@ -51,7 +88,7 @@ const Final = ({ formData, logo, randNum, curency }) => {
           <div className="flex justify-start pl-5">
             <li>Item</li>
           </div>
-          <div className="invisible h-7 md:flex gap-x-10 md:visible">
+          <div className="invisible h-7 md:flex gap-x-40 md:visible">
             <li className="px-2">Quantity</li>
             <li className="px-2">Rate</li>
             <li className="px-2">Amount</li>
@@ -60,22 +97,22 @@ const Final = ({ formData, logo, randNum, curency }) => {
         {formData.cart.map((item, index) => (
           <div className="md:flex gap-4 px-2">
             <input
-              className="w-full p-2 mr-1 md:p-2 mt-4 md:w-full"
+              className="w-full p-4 mr-2 md:p-3 mt-4 md:w-full"
               value={item.description}
               readOnly
             />
             <input
-              className="w-20 p-2 mr-1 md:p-2 mt-4"
+              className="w-10 text-right p-4 mr-2 md:p-3 mt-4"
               value={item.quantity}
               readOnly
             />
             <input
-              className="w-20 p-2 mr-1 md:p-2 mt-4"
+              className="w-25 text-right p-4 mr-2 md:p-3 mt-4"
               value={item.rate}
               readOnly
             />
             <input
-              className="w-20 p-2 mr-1 md:p-2 mt-4"
+              className="w-25 text-right p-4 mr-2 md:p-3 mt-4"
               value={item.amount}
               readOnly
             />
@@ -85,7 +122,7 @@ const Final = ({ formData, logo, randNum, curency }) => {
             <div className="flex justify-end">
               <div className="w-68 md:p-2 mt-4 bg-slate-300 rounded">
                   Balance Due:{" "}
-                  <span className="ml-12 text-2xl font-semibold">
+                  <span className="ml-12 py-2 text-2xl font-semibold">
                     {curency }{formData.totalamount}
                   </span>
               </div>
@@ -104,8 +141,15 @@ const Final = ({ formData, logo, randNum, curency }) => {
           <h1>{formData.terms}</h1>
         </div>
       </div>
+      <button
+        ref={buttonRef}
+        onClick={handleDownloadPdf}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+       >
+        Download as PDF
+      </button>
     </div>
   );
 }
 
-export default Final;
+export default FinalReceipt;
