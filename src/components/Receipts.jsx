@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
-import Final from "./FinalReceipt";
+import FinalReceipt from "./FinalReceipt";
 
-const Receiptss = () => {
+const Receipts = () => {
   const [logo, setLogo] = useState(null);
   const fileInputRef = useRef(null);
   const [submittedData, setSubmittedData] = useState(null);
+  const [randomNumber, setRandomNumber] = useState(null);
+  const [curency, setCurency] = useState('₦');
 
   const {
     register,
@@ -48,12 +50,13 @@ const Receiptss = () => {
 
   const calculateTotalAmount = () => {
     if (watchFields && watchFields.length > 0) {
-      return watchFields.reduce((total, field) => {
+      const totalAmount = watchFields.reduce((total, field) => {
         const amount = parseFloat(field.amount) || 0;
         return total + amount;
       }, 0);
+      return totalAmount.toLocaleString();
     }
-    return 0;
+    return '0';
   };
 
   const onSubmit = (data) => {
@@ -75,16 +78,27 @@ const Receiptss = () => {
     fileInputRef.current.value = null;
   };
 
+  const generateRandomNumber = () => {
+    const number = Math.floor(Math.random() * 900000000) + 100000000; // Generates a 9-digit number
+    setRandomNumber(number);
+  };
+
+  const handleChange = (event) => {
+    setCurency(event.target.value);
+  };
+
   return (
     <div>
       {submittedData ? (
-        <Final formData={submittedData} logo={logo} />
+        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency}  />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
             <div className="m-2 col-span-12 md:col-span-10 border-1 border border-gray-600">
               <div className="mx-auto p-5">
-                <p className="text-2xl text-center mb-8 font-bold">RECEIPT #300</p>
+                <p className="text-2xl text-center mb-8 font-bold">RECEIPT</p>
+      
+                
   
                 <div className="flex flex-col md:flex-row justify-between mb-6">
                   
@@ -176,12 +190,12 @@ const Receiptss = () => {
                         />
                         <input
                           {...register(`cart.${index}.quantity`)}
-                          className="w-10 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
+                          className="w-14 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                           defaultValue={field.quantity}
                         />
                         <span id="currency" className="px-1 md:mt-5 md:px-1">
-                          ₦
+                          {curency}
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
@@ -190,7 +204,7 @@ const Receiptss = () => {
                           defaultValue={field.rate}
                         />
                         <span id="currency" className="px-1 md:mt-5 md:px-1">
-                          ₦
+                          {curency}
                         </span>
                         <input
                           {...register(`cart.${index}.amount`)}
@@ -229,11 +243,11 @@ const Receiptss = () => {
                   </p>
                   <div className="mt-5 text-right">
                     <p className="text-lg font-semibold">
-                      Total: ₦{calculateTotalAmount().toFixed(2)}
+                      Total: {curency}{calculateTotalAmount()}
                     </p>
                   </div>
                   <div>
-                    <p className="underline">Terms & Instructions</p>
+                    <p className="underline">Terms & Conditions</p>
                     <div className="my-2">
                       <textarea
                         {...register("notes")}
@@ -261,9 +275,9 @@ const Receiptss = () => {
             <div className="col-span-12 md:col-span-2 m-2">
               <p className="text-sm">Select Currency: </p>
               <div>
-                <select className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
+                <select onChange={handleChange} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
+                <option value="₦">Nigeria Naira</option>
                   <option value="$">United States Dollar</option>
-                  <option value="N">Nigeria Naira</option>
                 </select>
               </div>
               <p className="text-sm">Select Type: </p>
@@ -274,6 +288,7 @@ const Receiptss = () => {
               </div>
               <div className="flex justify-center">
                 <button
+                  onClick={generateRandomNumber}
                   type="submit"
                   className="text-sm text-white p-4 w-44 bg-green-700 rounded hover:bg-green-500 mt-2"
                 >
@@ -288,4 +303,4 @@ const Receiptss = () => {
   );
 };
 
-export default Receiptss;
+export default Receipts;

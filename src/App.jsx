@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-dom";
-import Receiptss from "./components/Receipts";
+import Receipts from "./components/Receipts";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Receiptss />
+    element: <Receipts />
   },
 
 ]);

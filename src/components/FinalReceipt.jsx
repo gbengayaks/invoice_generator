@@ -1,11 +1,11 @@
 import React from "react";
 
-const Final = ({ formData, logo }) => {
+const Final = ({ formData, logo, randNum, curency }) => {
   console.log("new data :", formData);
 
   return (
     <div className="m-10">
-      <p className="text-2xl text-center mb-4 font-bold">RECEIPT #301</p>
+      <p className="text-2xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
       <div className="flex flex-col md:flex-row justify-between mb-6">
         <div className="mb-4 md:mb-0 md:w-1/2">
           <p className="font-bold">{formData.comName}</p>
@@ -83,10 +83,10 @@ const Final = ({ formData, logo }) => {
          ))}
          <div>
             <div className="flex justify-end">
-              <div className="w-60 md:p-2 mt-4 bg-slate-300 rounded">
+              <div className="w-68 md:p-2 mt-4 bg-slate-300 rounded">
                   Balance Due:{" "}
                   <span className="ml-12 text-2xl font-semibold">
-                    {formData.totalamount}
+                    {curency }{formData.totalamount}
                   </span>
               </div>
             </div>
