@@ -41,7 +41,7 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
   };
 
   return (
-    <div ref={printRef} className="mx-auto p-10 ">
+    <div ref={printRef} className="mx-auto p-12 mt-5">
       <p className="text-2xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
       <div className="flex flex-col md:flex-row justify-between mb-6">
         <div className="mb-4 md:mb-0 md:w-1/2">
@@ -97,22 +97,22 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
         {formData.cart.map((item, index) => (
           <div className="md:flex gap-4 px-2">
             <input
-              className="w-full p-4 mr-2 md:p-3 mt-4 md:w-full"
+              className="w-full mr-2 md:p-3 mt-4 md:w-full"
               value={item.description}
               readOnly
             />
             <input
-              className="w-10 text-right p-4 mr-2 md:p-3 mt-4"
+              className="w-10 text-right mr-2 md:p-3 mt-4"
               value={item.quantity}
               readOnly
-            />
+            /> 
             <input
-              className="w-25 text-right p-4 mr-2 md:p-3 mt-4"
+              className="w-25 h-14 text-right mr-2 md:p-3 mt-4"
               value={item.rate}
               readOnly
             />
             <input
-              className="w-25 text-right p-4 mr-2 md:p-3 mt-4"
+              className="w-25 text-right mr-2 md:p-3 mt-4"
               value={item.amount}
               readOnly
             />
@@ -120,9 +120,9 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
          ))}
          <div>
             <div className="flex justify-end">
-              <div className="w-68 md:p-2 mt-4 bg-slate-300 rounded">
+              <div className="w-68 h-16 md:p-2 mt-4 bg-slate-300 rounded">
                   Balance Due:{" "}
-                  <span className="ml-12 py-2 text-2xl font-semibold">
+                  <span className="ml-12 text-2xl font-semibold">
                     {curency }{formData.totalamount}
                   </span>
               </div>
@@ -141,13 +141,15 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
           <h1>{formData.terms}</h1>
         </div>
       </div>
-      <button
-        ref={buttonRef}
-        onClick={handleDownloadPdf}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-       >
-        Download as PDF
-      </button>
+      <div className="mt-5">
+        <button
+          ref={buttonRef}
+          onClick={handleDownloadPdf}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        >
+          Download as PDF
+        </button>
+      </div>
     </div>
   );
 }
