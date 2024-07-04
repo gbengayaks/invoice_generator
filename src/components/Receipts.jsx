@@ -8,6 +8,7 @@ const Receipts = () => {
   const [submittedData, setSubmittedData] = useState(null);
   const [randomNumber, setRandomNumber] = useState(null);
   const [curency, setCurency] = useState('₦');
+  const [choice, setChoice] = useState('RECEIPT');
 
   const {
     register,
@@ -87,21 +88,22 @@ const Receipts = () => {
     setCurency(event.target.value);
   };
 
+  const handleSelect = (event) => {
+    setChoice(event.target.value);
+  };
+
   return (
     <div>
       {submittedData ? (
-        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency}  />
+        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency} receinvoice={choice}  />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
             <div className="m-2 col-span-12 md:col-span-10 border-1 border border-gray-600">
               <div className="mx-auto p-5">
-                <p className="text-2xl text-center mb-8 font-bold">RECEIPT</p>
-      
-                
-  
+                <p className="text-2xl text-center mb-8 font-bold">{choice}</p>
                 <div className="flex flex-col md:flex-row justify-between mb-6">
-                  
+
                   <div className="mb-4 md:mb-0 md:w-1/2">
                     <input {...register("comName")} type="text" placeholder="Company Name" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("comAddress")} type="text" placeholder="Company Address" className="w-full mb-2 p-2 border rounded" />
@@ -282,8 +284,9 @@ const Receipts = () => {
               </div>
               <p className="text-sm">Select Type: </p>
               <div>
-                <select className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
+                <select onChange={handleSelect} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
                   <option value="RECEIPT">Receipt</option>
+                  <option value="INVOICE">Invoice</option>
                 </select>
               </div>
               <div className="flex justify-center">

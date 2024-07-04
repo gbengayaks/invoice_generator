@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const FinalReceipt = ({ formData, logo, randNum, curency }) => {
+const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice }) => {
   console.log("new data :", formData);
   const printRef = useRef();
   const buttonRef = useRef();
@@ -32,7 +32,7 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
 
   return (
     <div ref={printRef} className="mx-auto p-12 mt-5 bg-slate-50 text-lg">
-      <p className="text-4xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
+      <p className="text-4xl text-center mb-4 font-bold">{receinvoice} <span>{randNum}</span> </p>
       <div className="flex flex-col md:flex-row justify-between my-10">
         <div className="md:mb-0 md:w-1/2">
           <p className="font-bold">{formData.comName}</p>
@@ -40,9 +40,8 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
           <p>{formData.comEmail}</p>
           <p>{formData.comPhone}</p>
         </div>
-        {/* pdf.text(10, yOffset, `Item: ${item.description}`); */}
         
-        <div class="flex flex-col items-center md:w-1/2">
+        <div class="flex flex-col items-end md:w-1/2">
           {logo && (
           <div className="bg-contain w-28 rounded-md md:w-30 md:h-30 md:mx-0">
             <img src={logo} alt="Company Logo" className="rounded-full" />
@@ -79,7 +78,7 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
           <div className="flex justify-start pl-5">
             <li>Item</li>
           </div>
-          <div className="invisible h-7 md:flex gap-x-36 md:visible">
+          <div className="invisible h-7 md:flex gap-x-40 md:visible">
             <li className="px-2">Quantity</li>
             <li className="px-2">Rate</li>
             <li className="px-2">Amount</li>
