@@ -74,7 +74,7 @@ const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice }) => {
       </div>
       
       <div className="my-5">
-        <ul className="bg-blue-600 text-white p-2 rounded-md flex justify-between">
+        <ul className="bg-green-600 text-white p-2 rounded-md flex justify-between">
           <div className="flex justify-start pl-5">
             <li>Item</li>
           </div>
