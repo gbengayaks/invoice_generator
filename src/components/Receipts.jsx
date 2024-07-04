@@ -190,7 +190,7 @@ const Receipts = () => {
                         />
                         <input
                           {...register(`cart.${index}.quantity`)}
-                          className="w-14 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
+                          className="w-16 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                           defaultValue={field.quantity}
                         />

@@ -11,16 +11,6 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
     //hide the button
     buttonRef.current.style.display = 'none';
 
-    // const element = printRef.current;
-    // const canvas = await html2canvas(element);
-    // const data = canvas.toDataURL('image/png');
-    // const pdf = new jsPDF();
-    // const imgProperties = pdf.getImageProperties(data);
-    // const pdfWidth = pdf.internal.pageSize.getWidth();
-    // const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
-
-    // pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
     const element = printRef.current;
     const canvas = await html2canvas(element, { scale: 2 });
     const data = canvas.toDataURL('image/png');
@@ -41,20 +31,21 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
   };
 
   return (
-    <div ref={printRef} className="mx-auto p-12 mt-5">
-      <p className="text-2xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
-      <div className="flex flex-col md:flex-row justify-between mb-6">
-        <div className="mb-4 md:mb-0 md:w-1/2">
+    <div ref={printRef} className="mx-auto p-12 mt-5 bg-slate-50 text-lg">
+      <p className="text-4xl text-center mb-4 font-bold">RECEIPT <span>{randNum}</span> </p>
+      <div className="flex flex-col md:flex-row justify-between my-10">
+        <div className="md:mb-0 md:w-1/2">
           <p className="font-bold">{formData.comName}</p>
           <p>{formData.comAddress}</p>
           <p>{formData.comEmail}</p>
           <p>{formData.comPhone}</p>
         </div>
-
+        {/* pdf.text(10, yOffset, `Item: ${item.description}`); */}
+        
         <div class="flex flex-col items-center md:w-1/2">
           {logo && (
-          <div className="bg-contain border-2 rounded-md md:w-30 md:h-30 md:mx-0">
-            <img src={logo} alt="Company Logo" className="w-24 h-24 mt-2" />
+          <div className="bg-contain w-28 rounded-md md:w-30 md:h-30 md:mx-0">
+            <img src={logo} alt="Company Logo" className="rounded-full" />
           </div>
            )}
         </div>
@@ -88,31 +79,31 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
           <div className="flex justify-start pl-5">
             <li>Item</li>
           </div>
-          <div className="invisible h-7 md:flex gap-x-40 md:visible">
+          <div className="invisible h-7 md:flex gap-x-36 md:visible">
             <li className="px-2">Quantity</li>
             <li className="px-2">Rate</li>
             <li className="px-2">Amount</li>
           </div>
         </ul>
         {formData.cart.map((item, index) => (
-          <div className="md:flex gap-4 px-2">
+          <div className="md:flex">
             <input
-              className="w-full mr-2 md:p-3 mt-4 md:w-full"
+              className="w-full mr-1 md:p-3 mt-4 md:w-full"
               value={item.description}
               readOnly
             />
             <input
-              className="w-10 text-right mr-2 md:p-3 mt-4"
+              className="w-16 text-right mr-1 md:p-3 mt-4"
               value={item.quantity}
               readOnly
             /> 
             <input
-              className="w-25 h-14 text-right mr-2 md:p-3 mt-4"
+              className="w-25 h-14 text-right mr-1 md:p-3 mt-4"
               value={item.rate}
               readOnly
             />
             <input
-              className="w-25 text-right mr-2 md:p-3 mt-4"
+              className="w-25 text-right mr-1 md:p-3 mt-4"
               value={item.amount}
               readOnly
             />
@@ -133,7 +124,7 @@ const FinalReceipt = ({ formData, logo, randNum, curency }) => {
          </div>  
       </div>
       <div className="mt-10">
-        <p className="underline text-blue-700">Terms & Instructions</p>
+        <p className="underline text-blue-700">Terms & Conditions</p>
         <div className="my-2">
           <h1>{formData.notes}</h1>
         </div>
