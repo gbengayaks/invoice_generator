@@ -9,6 +9,7 @@ const Receipts = () => {
   const [randomNumber, setRandomNumber] = useState(null);
   const [curency, setCurency] = useState('₦');
   const [choice, setChoice] = useState('RECEIPT');
+  const [receipts, setReceipts] = useState([]);
 
   const {
     register,
@@ -17,13 +18,7 @@ const Receipts = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      receiptt: "RECEIPT",
-      tagg: "#",
-      cart: [],
-    },
-  });
+  } = useForm();
 
   const { fields, append, remove } = useFieldArray({
     name: "cart",
@@ -45,6 +40,7 @@ const Receipts = () => {
         const rate = parseFloat(field.rate) || 0;
         const amount = quantity * rate;
         setValue(`cart.${index}.amount`, amount);
+
       });
     }
   }, [watchFields, setValue]);
@@ -65,7 +61,28 @@ const Receipts = () => {
     data.totalamount = totalAmount;
     setSubmittedData(data);
     console.log(data);
+
+    localStorage.setItem('formData', JSON.stringify(data));
+    console.log('Form data saved to local storage:', data);
+
+    // Retrieve the existing receipts array from local storage
+    const receiptsData = localStorage.getItem('receiptsArray');
+    let receiptsArray = receiptsData ? JSON.parse(receiptsData) : [];
+
+    // Create the new receipt object
+    const newReceipt = {
+      id: receiptsArray.length + 1,
+      receipt: data
   };
+
+      // Add the new receipt to the array
+    receiptsArray.push(newReceipt);
+
+    // Save the updated array back to local storage
+    localStorage.setItem('receiptsArray', JSON.stringify(receiptsArray));
+    console.log('Receipt saved to local storage:', newReceipt);
+
+};
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -129,17 +146,17 @@ const Receipts = () => {
                       </div>
                    </>
                     ) : (
-                    <div>
+                    <div className="flex flex-col items-center md:flex-row md:items-start">
                       <input
                         {...register("file")}
                         onChange={handleFileChange}
                         type="file"
                         id="file"
                         accept="image/*"
-                        className="invisible pb-7 pr-24"
+                        className="invisible w-full md:w-auto mb-2 md:mb-0"
                         ref={fileInputRef}
                       />
-                      <label className="text-lg p-8 md:" htmlFor="file">
+                      <label className="text-lg p-8 md:py-0 md:px-4" htmlFor="file">
                         + Add Your Logo
                       </label>
                    </div>
@@ -147,7 +164,6 @@ const Receipts = () => {
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row justify-between">
-        
                   <div className="mb-4 pr-4 md:mb-0 md:w-1/3">
                     <h2 class="font-bold mr-2 mb-2">BILL TO</h2>
                     <input {...register("conName")} type="text" placeholder="Contact Name" className="w-full mb-2 p-2 border rounded" />
@@ -170,7 +186,7 @@ const Receipts = () => {
                   </div>
                 </div>
                 <div className="my-5">
-                  <ul className="bg-green-600 text-white p-2 rounded-md flex justify-between">
+                  <ul className="bg-blue-600 text-white p-2 rounded-md flex justify-between">
                     <div className="flex justify-start pl-5">
                       <li>Item</li>
                     </div>
