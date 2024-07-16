@@ -1,12 +1,20 @@
 import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-dom";
+import Index from "./components/Index";
 import Receipts from "./components/Receipts";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Receipts />
+    element: <Index />
+
   },
+  {
+    path: "/create-invoice",
+    element: <Receipts />
+
+  },
+
 
 ]);
 

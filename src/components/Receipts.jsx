@@ -107,7 +107,17 @@ const Receipts = () => {
 
   const handleSelect = (event) => {
     setChoice(event.target.value);
+    setDocumentType(event.target.value);
   };
+
+  const getMessage = () => {
+    if (choice === 'RECEIPT') {
+      return 'Total Paid';
+    } else{
+      return 'Balance Due';
+    }
+  }
+
 
   return (
     <div>
@@ -156,7 +166,7 @@ const Receipts = () => {
                         className="invisible w-full md:w-auto mb-2 md:mb-0"
                         ref={fileInputRef}
                       />
-                      <label className="text-lg p-8 md:py-0 md:px-4" htmlFor="file">
+                      <label className="text-lg mt-2 p-8 md:py-0 md:px-4" htmlFor="file">
                         + Add Your Logo
                       </label>
                    </div>
@@ -261,7 +271,7 @@ const Receipts = () => {
                   </p>
                   <div className="mt-5 text-right">
                     <p className="text-lg font-semibold">
-                      Total: {curency}{calculateTotalAmount()}
+                      {getMessage()}: {curency}{calculateTotalAmount()}
                     </p>
                   </div>
                   <div>
@@ -300,7 +310,7 @@ const Receipts = () => {
               </div>
               <p className="text-sm">Select Type: </p>
               <div>
-                <select onChange={handleSelect} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
+                <select onChange={handleSelect} value={choice} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
                   <option value="RECEIPT">Receipt</option>
                   <option value="INVOICE">Invoice</option>
                 </select>
