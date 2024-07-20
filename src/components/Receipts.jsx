@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import FinalReceipt from "./FinalReceipt";
+import Header from "./Header";
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
@@ -9,7 +10,7 @@ const Receipts = () => {
   const [randomNumber, setRandomNumber] = useState(null);
   const [curency, setCurency] = useState('₦');
   const [choice, setChoice] = useState('RECEIPT');
-  const [receipts, setReceipts] = useState([]);
+  //const [receipts, setReceipts] = useState([]);
 
   const {
     register,
@@ -43,6 +44,7 @@ const Receipts = () => {
 
       });
     }
+    
   }, [watchFields, setValue]);
 
   const calculateTotalAmount = () => {
@@ -121,6 +123,7 @@ const Receipts = () => {
 
   return (
     <div>
+      <Header />
       {submittedData ? (
         <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency} receinvoice={choice}  />
       ) : (
@@ -141,7 +144,7 @@ const Receipts = () => {
                   <div className="mx-auto border rounded-md bg-gray-300 md:w-60 md:h-40 md:mx-0">
                     {logo ? (
                    <>
-                      <img 
+                     <img 
                         src={logo} 
                         alt="Company Logo" 
                         className="w-36 h-36 mt-2 bg-blue-400 text-center rounded-full" 
@@ -328,6 +331,7 @@ const Receipts = () => {
           </div>
         </form>
       )}
+
     </div>
   );
 };

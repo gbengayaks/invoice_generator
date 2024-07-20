@@ -1,22 +1,12 @@
 import React from 'react';
+import Header from './Header';
+
 //import './App.css';
 
 function Index() {
   return (
     <div className="text-center h-screen">
-      <header className="bg-blue-800 p-4 flex justify-between items-center text-white">
-        <div className="text-xl font-bold">Invoicer Pro</div>
-        <nav>
-          <ul className="flex space-x-4">
-            <li>
-              <a href="create-invoice" className="hover:underline">Create an Invoice</a>
-            </li>
-            <li>
-              <a href="#view-invoice" className="hover:underline">View Invoice</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <Header />
       <main className="mx-auto p-8 text-center">
         <h1 className="text-3xl font-bold mb-4">Introducing Invoicer Pro</h1>
         <p className="text-lg p-4 ">
