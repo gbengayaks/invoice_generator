@@ -37,7 +37,7 @@ const ReceiptTable = ({ generateReceipt, deleteReceipt }) => {
       ):(
         <>
           <Header />
-          <div className="overflow-x-auto mt-5">
+          <div className="overflow-x-auto mt-5 mx-8" >
             <table className="min-w-full bg-white">
               <thead className="bg-slate-600 text-white">
                 <tr>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import FinalReceipt from "./FinalReceipt";
 import Header from "./Header";
+import { FaPlus } from "react-icons/fa";
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
@@ -10,9 +11,8 @@ const Receipts = () => {
   const [randomNumber, setRandomNumber] = useState(null);
   const [curency, setCurency] = useState('₦');
   const [choice, setChoice] = useState('RECEIPT');
-  const [taxPercentage, setTaxPercentage] = useState(0);
-  const [discountPercentage, setDiscountPercentage] = useState(0);
-  
+  //const [receipts, setReceipts] = useState([]);
+
   const {
     register,
     control,
@@ -42,8 +42,10 @@ const Receipts = () => {
         const rate = parseFloat(field.rate) || 0;
         const amount = quantity * rate;
         setValue(`cart.${index}.amount`, amount);
+
       });
     }
+    
   }, [watchFields, setValue]);
 
   const calculateTotalAmount = () => {
@@ -52,48 +54,38 @@ const Receipts = () => {
         const amount = parseFloat(field.amount) || 0;
         return total + amount;
       }, 0);
-      return totalAmount;
+      return totalAmount.toLocaleString();
     }
-    return 0;
-  };
-
-  const calculateTaxAmount = (totalAmount) => {
-    return (totalAmount * taxPercentage) / 100;
-  };
-
-  const calculateDiscountAmount = (totalAmount) => {
-    return (totalAmount * discountPercentage) / 100;
-  };
-
-  const calculateFinalTotalAmount = () => {
-    const totalAmount = calculateTotalAmount();
-    const taxAmount = calculateTaxAmount(totalAmount);
-    const discountAmount = calculateDiscountAmount(totalAmount);
-    return (totalAmount + taxAmount - discountAmount).toLocaleString();
+    return '0';
   };
 
   const onSubmit = (data) => {
     const totalAmount = calculateTotalAmount();
-    const taxAmount = calculateTaxAmount(totalAmount);
-    const discountAmount = calculateDiscountAmount(totalAmount);
-    const finalTotalAmount = totalAmount + taxAmount - discountAmount;
-    data.totalamount = finalTotalAmount.toLocaleString();
+    data.totalamount = totalAmount;
     setSubmittedData(data);
+    console.log(data);
 
     localStorage.setItem('formData', JSON.stringify(data));
+    console.log('Form data saved to local storage:', data);
 
+    // Retrieve the existing receipts array from local storage
     const receiptsData = localStorage.getItem('receiptsArray');
     let receiptsArray = receiptsData ? JSON.parse(receiptsData) : [];
 
+    // Create the new receipt object
     const newReceipt = {
       id: receiptsArray.length + 1,
       receipt: data
-    };
+  };
 
+      // Add the new receipt to the array
     receiptsArray.push(newReceipt);
 
+    // Save the updated array back to local storage
     localStorage.setItem('receiptsArray', JSON.stringify(receiptsArray));
-  };
+    console.log('Receipt saved to local storage:', newReceipt);
+
+};
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -108,7 +100,7 @@ const Receipts = () => {
   };
 
   const generateRandomNumber = () => {
-    const number = Math.floor(Math.random() * 900000000) + 100000000;
+    const number = Math.floor(Math.random() * 900000000) + 100000000; // Generates a 9-digit number
     setRandomNumber(number);
   };
 
@@ -118,17 +110,23 @@ const Receipts = () => {
 
   const handleSelect = (event) => {
     setChoice(event.target.value);
+    setDocumentType(event.target.value);
   };
 
   const getMessage = () => {
-    return choice === 'RECEIPT' ? 'Total Paid' : 'Balance Due';
-  };
+    if (choice === 'RECEIPT') {
+      return 'Total Paid';
+    } else{
+      return 'Balance Due';
+    }
+  }
+
 
   return (
     <div>
       <Header />
       {submittedData ? (
-        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency} receinvoice={choice} />
+        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency} receinvoice={choice}  />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
@@ -136,67 +134,69 @@ const Receipts = () => {
               <div className="mx-auto p-5">
                 <p className="text-2xl text-center mb-8 font-bold">{choice}</p>
                 <div className="flex flex-col md:flex-row justify-between mb-6">
+
                   <div className="mb-4 md:mb-0 md:w-1/2">
                     <input {...register("comName")} type="text" placeholder="Company Name" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("comAddress")} type="text" placeholder="Company Address" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("comEmail")} type="text" placeholder="Email Address" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("comPhone")} type="phone" placeholder="Phone Number" className="w-full mb-2 p-2 border rounded" />
                   </div>
-
+                  
                   <div className="mx-auto border rounded-md bg-gray-300 md:w-60 md:h-40 md:mx-0">
                     {logo ? (
-                      <>
-                        <img
-                          src={logo}
-                          alt="Company Logo"
-                          className="w-36 h-36 mt-2 bg-blue-400 text-center rounded-full"
-                        />
-                        <div className="flex justify-center items-center">
-                          <button
-                            onClick={voidSelect}
-                            className="bg-red-600 text-white py-1 px-2 mb-8 rounded"
-                          >
-                            Clear Logo
-                          </button>
-                        </div>
-                      </>
+                   <>
+                     <img 
+                        src={logo} 
+                        alt="Company Logo" 
+                        className="w-36 h-36 mt-2 bg-blue-400 text-center rounded-full" 
+                      />
+                      <div className="flex justify-center items-center">
+                        <button
+                          onClick={voidSelect}
+                          className="bg-red-600 text-white py-1 px-2 mb-8 rounded"
+                        >
+                          Clear Logo
+                        </button>
+                      </div>
+                   </>
                     ) : (
                       <div className="flex flex-col items-center md:flex-row md:items-center">
-                        <label className="flex justify-center items-center mt-8 text-lg md:py-0 md:px-4" htmlFor="fileInput">
-                          + Add Logo
-                        </label>
-                        <input
-                          {...register("file")}
-                          onChange={handleFileChange}
-                          type="file"
-                          id="fileInput"
-                          accept="image/*"
-                          className="invisible w-full md:w-auto mb-2 md:mb-0"
-                          ref={fileInputRef}
-                        />
-                      </div>
-                    )}
+                      <input
+                        {...register("file")}
+                        onChange={handleFileChange}
+                        type="file"
+                        id="file"
+                        accept="image/*"
+                        className="invisible w-full md:w-auto mb-2 md:mb-0"
+                        ref={fileInputRef}
+                      />
+                      <label className="flex items-center text-lg md:py-0 md:px-4" htmlFor="file">
+                        <FaPlus />
+                        <h5 className="pl-2">Add Logo</h5> 
+                      </label>
+                    </div>
+                   )}
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row justify-between">
                   <div className="mb-4 pr-4 md:mb-0 md:w-1/3">
-                    <h2 className="font-bold mr-2 mb-2">BILL TO</h2>
+                    <h2 class="font-bold mr-2 mb-2">BILL TO</h2>
                     <input {...register("conName")} type="text" placeholder="Contact Name" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("cliComName")} type="text" placeholder="Client Company Name" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("conAddress")} type="text" placeholder="Address" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("conPhone")} type="phone" placeholder="Phone" className="w-full mb-2 p-2 border rounded" />
                   </div>
-
+                
                   <div className="mb-4 pr-4 md:mb-0 md:w-1/3">
-                    <h2 className="font-bold mb-2">SHIP TO</h2>
+                    <h2 class="font-bold mb-2">SHIP TO</h2>
                     <input {...register("shipName")} type="text" placeholder="Name/Dept" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("shipCliName")} type="text" placeholder="Client Company Name" className="w-full mb-2 p-2 border rounded" />
                     <input {...register("shipToAddress")} type="text" placeholder="Address" className="w-full mb-2 p-2 border rounded" />
-                    <input {...register("shipPhone")} type="phone" placeholder="Phone" className="w-full mb-2 p-2 border rounded" />
+                    <input {...register("shipPhone")} type="pnone" placeholder="Phone" className="w-full mb-2 p-2 border rounded" />
                   </div>
-
+                
                   <div className="md:w-1/3">
-                    <h2 className="font-bold mb-2">Date</h2>
+                    <h2 class="font-bold mb-2">Date</h2>
                     <input {...register("transdate")} type="date" placeholder="mm/dd/yyyy" className="w-full mb-2 p-2 border rounded" />
                   </div>
                 </div>
@@ -275,32 +275,8 @@ const Receipts = () => {
                     {errors.cart?.root?.message}
                   </p>
                   <div className="mt-5 text-right">
-                  <p className="text-lg font-semibold">
-                      Sub-Total: {curency}{calculateTotalAmount()}
-                    </p>
-                    <div className="flex justify-end my-5">
-                      <h2 className="font-semibold m-2">Tax (%)</h2>
-                      <input
-                        type="number"
-                        value={taxPercentage}
-                        onChange={(e) => setTaxPercentage(parseFloat(e.target.value))}
-                        placeholder="Tax Percentage"
-                        className="mb-2 p-2 w-28 border rounded"
-                      />                      
-                    </div>
-                    <div className="flex justify-end my-5">
-                      <h2 className="font-semibold m-2">Discount (%)</h2>
-                      <input
-                        type="number"
-                        value={discountPercentage}
-                        onChange={(e) => setDiscountPercentage(e.target.value)}
-                        placeholder="Discount Percentage"
-                        className="mb-2 p-2 w-28 border rounded"
-                      />
-                    </div>
-
                     <p className="text-lg font-semibold">
-                      {getMessage()}: {curency}{calculateFinalTotalAmount()}
+                      {getMessage()}: {curency}{calculateTotalAmount()}
                     </p>
                   </div>
                   <div>
@@ -333,7 +309,7 @@ const Receipts = () => {
               <p className="text-sm">Select Currency: </p>
               <div>
                 <select onChange={handleChange} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
-                  <option value="₦">Nigeria Naira</option>
+                <option value="₦">Nigeria Naira</option>
                   <option value="$">United States Dollar</option>
                 </select>
               </div>
@@ -357,6 +333,7 @@ const Receipts = () => {
           </div>
         </form>
       )}
+
     </div>
   );
 };
