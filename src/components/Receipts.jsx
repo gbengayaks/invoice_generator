@@ -2,16 +2,18 @@ import React, { useState, useRef, useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import FinalReceipt from "./FinalReceipt";
 import Header from "./Header";
+import countriesAndCurrencySymbols from './countriesAndCurrencySymbols';
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
   const fileInputRef = useRef(null);
   const [submittedData, setSubmittedData] = useState(null);
   const [randomNumber, setRandomNumber] = useState(null);
-  const [curency, setCurency] = useState('₦');
   const [choice, setChoice] = useState('RECEIPT');
   const [taxPercentage, setTaxPercentage] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [selectedCurrencySymbol, setSelectedCurrencySymbol] = useState('₦');
+
   
   const {
     register,
@@ -77,8 +79,10 @@ const Receipts = () => {
     const taxAmount = calculateTaxAmount(totalAmount);
     const discountAmount = calculateDiscountAmount(totalAmount);
     const finalTotalAmount = totalAmount + taxAmount - discountAmount;
-    data.totalamount = finalTotalAmount.toLocaleString();
+    data.totalamount = finalTotalAmount;
     setSubmittedData(data);
+
+    //console.log(setSubmittedData(data));
 
     localStorage.setItem('formData', JSON.stringify(data));
 
@@ -112,9 +116,19 @@ const Receipts = () => {
     setRandomNumber(number);
   };
 
+  // const handleChange = (event) => {
+  //   setCurency(event.target.value);
+  // };
   const handleChange = (event) => {
-    setCurency(event.target.value);
-  };
+    const selectedValue = event.target.value;
+    const selectedCountry = countriesAndCurrencySymbols.find(
+      (country) => country.symbol === selectedValue
+     );
+
+    if (selectedCountry) {
+      setSelectedCurrencySymbol(selectedCountry.symbol);
+     }
+    };
 
   const handleSelect = (event) => {
     setChoice(event.target.value);
@@ -128,7 +142,18 @@ const Receipts = () => {
     <div>
       <Header />
       {submittedData ? (
-        <FinalReceipt formData={submittedData} logo={logo} randNum={randomNumber} curency={curency} receinvoice={choice} />
+        <FinalReceipt formData={submittedData} 
+          logo={logo} 
+          randNum={randomNumber} 
+          curency={selectedCurrencySymbol} 
+          receinvoice={choice} 
+          subTotalAmount={calculateTotalAmount()}
+          getMessage={getMessage()}
+          taxValue={calculateTaxAmount()}
+          discountValue={calculateDiscountAmount()}
+
+
+        />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
@@ -228,7 +253,7 @@ const Receipts = () => {
                           defaultValue={field.quantity}
                         />
                         <span id="currency" className="px-1 md:mt-5 md:px-1">
-                          {curency}
+                          {selectedCurrencySymbol}
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
@@ -237,7 +262,7 @@ const Receipts = () => {
                           defaultValue={field.rate}
                         />
                         <span id="currency" className="px-1 md:mt-5 md:px-1">
-                          {curency}
+                          {selectedCurrencySymbol}
                         </span>
                         <input
                           {...register(`cart.${index}.amount`)}
@@ -275,8 +300,8 @@ const Receipts = () => {
                     {errors.cart?.root?.message}
                   </p>
                   <div className="mt-5 text-right">
-                  <p className="text-lg font-semibold">
-                      Sub-Total: {curency}{calculateTotalAmount()}
+                    <p className="text-lg font-semibold">
+                      Sub-Total: {selectedCurrencySymbol}{calculateTotalAmount()}
                     </p>
                     <div className="flex justify-end my-5">
                       <h2 className="font-semibold m-2">Tax (%)</h2>
@@ -288,7 +313,7 @@ const Receipts = () => {
                         className="mb-2 p-2 w-28 border rounded"
                       />                      
                     </div>
-                    <div className="flex justify-end my-5">
+                    <div className="flex justify-end mb-5">
                       <h2 className="font-semibold m-2">Discount (%)</h2>
                       <input
                         type="number"
@@ -300,7 +325,7 @@ const Receipts = () => {
                     </div>
 
                     <p className="text-lg font-semibold">
-                      {getMessage()}: {curency}{calculateFinalTotalAmount()}
+                      {getMessage()}: {selectedCurrencySymbol}{calculateFinalTotalAmount()}
                     </p>
                   </div>
                   <div>
@@ -333,8 +358,11 @@ const Receipts = () => {
               <p className="text-sm">Select Currency: </p>
               <div>
                 <select onChange={handleChange} className="w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm">
-                  <option value="₦">Nigeria Naira</option>
-                  <option value="$">United States Dollar</option>
+                  {countriesAndCurrencySymbols.map((country, index) => (
+                      <option key={index} value={country.symbol}>
+                        {country.country} ({country.currency})
+                      </option>
+                    ))}
                 </select>
               </div>
               <p className="text-sm">Select Type: </p>

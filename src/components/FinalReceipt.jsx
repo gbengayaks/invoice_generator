@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice }) => {
+const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice, getMessage, subTotalAmount }) => {
   console.log("new data :", formData);
   const printRef = useRef();
   const buttonRef = useRef();
@@ -31,8 +31,9 @@ const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice }) => {
   };
 
   return (
-    <div ref={printRef} className="mx-auto p-12 mt-5 bg-slate-50 text-lg">
-      <p className="text-4xl text-center mb-4 font-bold">{receinvoice} <span>{randNum}</span> </p>
+    <div ref={printRef} className="mx-auto p-12 mt-2 bg-slate-50 text-lg">
+      <p className="text-3xl text-center mb-1 font-bold">{receinvoice}</p>
+      <p className="text-sm text-center font-semibold">{randNum}</p>
       <div className="flex flex-col md:flex-row justify-between my-10">
         <div className="md:mb-0 md:w-1/2">
           <p className="font-bold">{formData.comName}</p>
@@ -109,13 +110,26 @@ const FinalReceipt = ({ formData, logo, randNum, curency, receinvoice }) => {
           </div>
          ))}
          <div>
+          <div className="text-right mt-2">
+              <p className="text-lg font-semibold">
+                Sub-Total: {curency} {subTotalAmount}
+              </p>
+              <p className="text-lg font-semibold">
+                Tax: {curency} {(formData.totalamount-subTotalAmount)}
+              </p>
+              <p className="text-lg font-semibold">
+                Discount: {curency} {formData.discountAmount}
+              </p>
+          </div>
+              
             <div className="flex justify-end">
               <div className="w-68 h-16 md:p-2 mt-4 bg-slate-300 rounded">
-                  Balance Due:{" "}
+                 {getMessage}:{" "}
                   <span className="ml-12 text-2xl font-semibold">
-                    {curency }{formData.totalamount}
+                    {curency} {(formData.totalamount).toLocaleString()}
                   </span>
               </div>
+
             </div>
             <div className="mt-8">
               <p className="">Thank you for your business!</p>

@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-d
 import Index from "./components/Index";
 import Receipts from "./components/Receipts";
 import ReceiptTable from "./components/ReceiptTable";
+//import CurrencySelector from "./components/CurrencySelector";
 
 const router = createBrowserRouter([
   {
